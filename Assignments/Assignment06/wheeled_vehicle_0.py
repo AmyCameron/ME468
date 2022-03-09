@@ -136,7 +136,7 @@ vehicle.SetWheelVisualizationType(veh.VisualizationType_NONE)
 # Create the terrain
 terrain = veh.RigidTerrain(vehicle.GetSystem(), veh.GetDataFile(rigidterrain_file))
 AddFixedObstacles(vehicle.GetSystem())
-##AddMovingObstacles(vehicle.GetSystem())
+AddMovingObstacles(vehicle.GetSystem())
 
 # Create and initialize the powertrain system
 powertrain = veh.SimplePowertrain(veh.GetDataFile(simplepowertrain_file))

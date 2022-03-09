@@ -19,6 +19,7 @@
 import pychrono as chrono
 import pychrono.vehicle as veh
 import pychrono.irrlicht as chronoirr
+import matplotlib.pyplot as plt
 import os
 import math as m
 
@@ -185,6 +186,8 @@ app.AssetUpdateAll()
 #### ---------------------------------------------------------------------------
 
 #### ADD YOUR CODE HERE
+driver_file = "driver/DriverData.txt"
+driver = veh.ChDataDriver(vehicle, veh.GetDataFile(driver_file))
 
 # ---------------
 # Simulation loop
@@ -196,6 +199,12 @@ render_steps = m.ceil(render_step_size / step_size)
 #Initialize simulation frame counter and simulation time
 step_number = 0
 time = 0
+
+# List for visualize
+vposition_x = []
+vposition_y = []
+vposition_z = []
+time_s = []
 
 realtime_timer = chrono.ChRealtimeStepTimer()
 
@@ -222,12 +231,38 @@ while (app.GetDevice().run())  :
     terrain.Advance(step_size)
     app.Advance(step_size)
 
+    vposition_x.append(vehicle.GetVehiclePos().x)
+    vposition_y.append(vehicle.GetVehiclePos().y)
+    vposition_z.append(vehicle.GetVehiclePos().z)
+    time_s.append(time)
+
+    if(time > 10):
+      fig = plt.figure(figsize=(8, 6))
+      plt.plot(vposition_x,vposition_y)
+      plt.xscale("linear")
+      plt.yscale("linear")
+      plt.xlabel("X - Position [m]",fontsize=12)
+      plt.ylabel("Y - Position [m]",fontsize=12)
+      plt.title("The vehicle trajectory",fontsize=12)
+      plt.show()
+
+      fig = plt.figure(figsize=(8, 6))
+      plt.plot(time_s,vposition_z)
+      plt.xscale("linear")
+      plt.yscale("linear")
+      plt.xlabel("Time [s]",fontsize=12)
+      plt.ylabel("Z - Position [m]",fontsize=12)
+      plt.title("The vehicle height",fontsize=12)
+      plt.show()
+
+      break
+
 
     # Increment step number
     step_number += 1
+    time += 1
     # Spin in place for real time to catch up
     realtime_timer.Spin(step_size)
 
-    if (time > 12):
-        break
+
 
